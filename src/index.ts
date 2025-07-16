@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-
+import { Bird } from "./bird";
 import "./style.css";
 
 const gameWidth = 800;
@@ -20,7 +20,9 @@ window.onload = async (): Promise<void> => {
 
     resizeCanvas();
 
-    const birdFromSprite = getBird();
+    const birdFromSprite = new Bird();
+    // birdFromSprite.moveLeft();
+
     birdFromSprite.anchor.set(0.5, 0.5);
     birdFromSprite.position.set(gameWidth / 2, gameHeight / 2);
 
@@ -54,19 +56,4 @@ function resizeCanvas(): void {
     resize();
 
     window.addEventListener("resize", resize);
-}
-
-function getBird(): PIXI.AnimatedSprite {
-    const bird = new PIXI.AnimatedSprite([
-        PIXI.Texture.from("birdUp.png"),
-        PIXI.Texture.from("birdMiddle.png"),
-        PIXI.Texture.from("birdDown.png"),
-    ]);
-
-    bird.loop = true;
-    bird.animationSpeed = 0.1;
-    bird.play();
-    bird.scale.set(3);
-
-    return bird;
 }
