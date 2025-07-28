@@ -1,9 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Bird } from "./bird";
+import { gameWidth, gameHeight } from "./gameSettings";
 import "./style.css";
-
-const gameWidth = 800;
-const gameHeight = 600;
 
 const app = new PIXI.Application({
     backgroundColor: 0xd3d3d3,
@@ -21,11 +19,6 @@ window.onload = async (): Promise<void> => {
     resizeCanvas();
 
     const birdFromSprite = new Bird();
-    // birdFromSprite.moveLeft();
-
-    birdFromSprite.anchor.set(0.5, 0.5);
-    birdFromSprite.position.set(gameWidth / 2, gameHeight / 2);
-
     stage.addChild(birdFromSprite);
 };
 
