@@ -25,7 +25,7 @@ window.onload = async (): Promise<void> => {
 async function loadGameAssets(): Promise<void> {
     return new Promise((res, rej) => {
         const loader = PIXI.Loader.shared;
-        loader.add("rabbit", "./assets/simpleSpriteSheet.json");
+        loader.add("ship", "./assets/space-invaders-ship.png");
 
         loader.onComplete.once(() => {
             res();

@@ -3,15 +3,12 @@ import { gameWidth, gameHeight } from "./gameSettings";
 
 export class Bird extends PIXI.AnimatedSprite {
     constructor() {
-        super([
-            PIXI.Texture.from("birdUp.png"),
-            PIXI.Texture.from("birdMiddle.png"),
-            PIXI.Texture.from("birdDown.png"),
-        ]);
+        super([PIXI.Texture.from("ship")]);
+
         this.loop = true;
         this.animationSpeed = 0.1;
         this.play();
-        this.scale.set(3);
+        this.scale.set(0.15);
         this.anchor.set(0.5, 0.5);
         this.position.set(gameWidth / 2, gameHeight / 2);
 
@@ -28,7 +25,7 @@ export class Bird extends PIXI.AnimatedSprite {
             if (this.x <= 0 + bound) {
                 return;
             }
-            this.x -= 10;
+            this.x -= 15;
             console.log("left key pressed");
         } else if (key === "ArrowRight") {
             if (this.x >= gameWidth - bound) {
