@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
-import { Bird } from "./bird";
+import { Ship } from "./ship";
+import { Bullet } from "./bullet";
 import { gameWidth, gameHeight } from "./gameSettings";
 import "./style.css";
 
@@ -18,8 +19,11 @@ window.onload = async (): Promise<void> => {
 
     resizeCanvas();
 
-    const birdFromSprite = new Bird();
-    stage.addChild(birdFromSprite);
+    const shipFromSprite = new Ship();
+    stage.addChild(shipFromSprite);
+
+    const bullet = new Bullet();
+    stage.addChild(bullet);
 };
 
 async function loadGameAssets(): Promise<void> {
