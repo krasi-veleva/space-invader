@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { gameWidth, gameHeight } from "./gameSettings";
 
-export class Bird extends PIXI.AnimatedSprite {
+export class Ship extends PIXI.AnimatedSprite {
     constructor() {
         super([PIXI.Texture.from("ship")]);
 
@@ -10,7 +10,7 @@ export class Bird extends PIXI.AnimatedSprite {
         this.play();
         this.scale.set(0.15);
         this.anchor.set(0.5, 0.5);
-        this.position.set(gameWidth / 2, gameHeight / 2);
+        this.position.set(gameWidth / 2, gameHeight - this.height / 2);
 
         window.addEventListener("keydown", (e) => {
             this.moveLeftAndRight(e);
