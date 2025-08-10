@@ -1,14 +1,15 @@
-name: Linux build
+name: Lint And Build
 
 on: [push, pull_request]
 
 jobs:
     build:
-        runs-on: ubuntu-latest
-
         strategy:
             matrix:
-                node-version: [12.x]
+                os: [windows-latest, macos-latest, ubuntu-latest]
+                node-version: [22.x]
+
+        runs-on: ${{ matrix.os }}
 
         steps:
             - uses: actions/checkout@v1
@@ -19,10 +20,10 @@ jobs:
             - name: npm install
               run: |
                   npm ci
-            - name: code style check
+            - name: lint
               run: |
-                  npm run code-style-check
-            - name: build, and test
+                  npm run lint
+            - name: build and test
               run: |
                   npm run build
                   npm test --if-present

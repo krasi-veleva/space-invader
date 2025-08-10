@@ -1,56 +1,75 @@
-import * as PIXI from "pixi.js";
-import { Ship } from "./ship";
-import { Bullet } from "./bullet";
-import { gameWidth, gameHeight } from "./gameSettings";
 import "./style.css";
+import { Application, Assets, AssetsManifest } from "pixi.js";
+import "@esotericsoftware/spine-pixi-v8";
 
-const app = new PIXI.Application({
-    backgroundColor: 0xd3d3d3,
-    width: gameWidth,
-    height: gameHeight,
-});
+import { getSpine } from "./utils/spine-example";
+import { createBird } from "./utils/create-bird";
 
-const stage = app.stage;
+const gameWidth = 1280;
+const gameHeight = 720;
 
-window.onload = async (): Promise<void> => {
+console.log(
+    `%cPixiJS V8\nTypescript Boilerplate%c ${VERSION} %chttp://www.pixijs.com %c❤️`,
+    "background: #ff66a1; color: #FFFFFF; padding: 2px 4px; border-radius: 2px; font-weight: bold;",
+    "color: #D81B60; font-weight: bold;",
+    "color: #C2185B; font-weight: bold; text-decoration: underline;",
+    //     "color: #ff66a1;",
+);
+
+(async () => {
+    const app = new Application();
+
+    //await window load
+    await new Promise((resolve) => {
+        window.addEventListener("load", resolve);
+    });
+
+    await app.init({ backgroundColor: 0xd3d3d3, width: gameWidth, height: gameHeight });
+
     await loadGameAssets();
 
-    document.body.appendChild(app.view);
+    async function loadGameAssets(): Promise<void> {
+        const manifest = {
+            bundles: [
+                { name: "bird", assets: [{ alias: "bird", src: "./assets/simpleSpriteSheet.json" }] },
+                {
+                    name: "spineboyData",
+                    assets: [{ alias: "spineboyData", src: "./assets/spine-assets/spineboy-pro.skel" }],
+                },
+                {
+                    name: "spineboyAtlas",
+                    assets: [{ alias: "spineboyAtlas", src: "./assets/spine-assets/spineboy-pma.atlas" }],
+                },
+            ],
+        } satisfies AssetsManifest;
 
-    resizeCanvas();
+        await Assets.init({ manifest });
+        await Assets.loadBundle(["bird", "spineboyData", "spineboyAtlas", "pixieData", "pixieAtlas"]);
 
-    const shipFromSprite = new Ship();
-    stage.addChild(shipFromSprite);
+        document.body.appendChild(app.canvas);
 
-    const bullet = new Bullet();
-    stage.addChild(bullet);
-};
+        resizeCanvas();
 
-async function loadGameAssets(): Promise<void> {
-    return new Promise((res, rej) => {
-        const loader = PIXI.Loader.shared;
-        loader.add("ship", "./assets/space-invaders-ship.png");
+        const birdFromSprite = createBird();
 
-        loader.onComplete.once(() => {
-            res();
-        });
+        birdFromSprite.anchor.set(0.5, 0.5);
+        birdFromSprite.position.set(gameWidth / 2, gameHeight / 4);
 
-        loader.onError.once(() => {
-            rej();
-        });
+        const spineExample = await getSpine();
 
-        loader.load();
-    });
-}
+        app.stage.addChild(birdFromSprite);
+        app.stage.addChild(spineExample);
+    }
 
-function resizeCanvas(): void {
-    const resize = () => {
-        app.renderer.resize(window.innerWidth, window.innerHeight);
-        app.stage.scale.x = window.innerWidth / gameWidth;
-        app.stage.scale.y = window.innerHeight / gameHeight;
-    };
+    function resizeCanvas(): void {
+        const resize = () => {
+            app.renderer.resize(window.innerWidth, window.innerHeight);
+            app.stage.scale.x = window.innerWidth / gameWidth;
+            app.stage.scale.y = window.innerHeight / gameHeight;
+        };
 
-    resize();
+        resize();
 
-    window.addEventListener("resize", resize);
-}
+        window.addEventListener("resize", resize);
+    }
+})();

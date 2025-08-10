@@ -1,23 +1,20 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable */
 
-import * as path from "path";
+const path = require("path");
 
-import { merge } from "webpack-merge";
-import { Configuration } from "webpack";
+const merge = require("webpack-merge").merge;
 
 // plugins
-import HtmlWebpackPlugin from "html-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import CopyPlugin from "copy-webpack-plugin";
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
-module.exports = (env: { mode: "development" | "production" }) => {
-    const developmentMode = env.mode === "development";
-
-    const config: Configuration = {
+module.exports = (env) => {
+    const config = {
         entry: "./src/index.ts",
 
         resolve: {
-            extensions: [".ts", ".tsx", ".js", ".json"],
+            extensions: [".ts", ".tsx", ".js", ".json", ".js", ".jsx"],
         },
 
         module: {
@@ -27,9 +24,6 @@ module.exports = (env: { mode: "development" | "production" }) => {
                     use: [
                         {
                             loader: MiniCssExtractPlugin.loader,
-                            options: {
-                                hmr: developmentMode,
-                            },
                         },
                         "css-loader",
                     ],
@@ -50,18 +44,25 @@ module.exports = (env: { mode: "development" | "production" }) => {
                         from: "assets/**",
 
                         // if there are nested subdirectories , keep the hierarchy
-                        transformPath(targetPath, absolutePath) {
+                        to({ absoluteFilename }) {
                             const assetsPath = path.resolve(__dirname, "assets");
-                            const endpPath = absolutePath.slice(assetsPath.length);
 
-                            return Promise.resolve(`assets/${endpPath}`);
+                            if (!absoluteFilename) {
+                                throw Error();
+                            }
+
+                            const endPath = absoluteFilename.slice(assetsPath.length);
+
+                            return Promise.resolve(`assets/${endPath}`);
                         },
                     },
                 ],
             }),
         ],
     };
-    const envConfig = require(path.resolve(__dirname, `./webpack.${env.mode}.ts`))(env);
+    const isDev = env.mode === "development";
+    const webpackConfigFile = isDev ? "webpack.dev.cjs" : "webpack.prod.cjs";
+    const envConfig = require(path.resolve(__dirname, webpackConfigFile))();
 
     const mergedConfig = merge(config, envConfig);
 
