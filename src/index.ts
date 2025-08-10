@@ -2,19 +2,8 @@ import "./style.css";
 import { Application, Assets, AssetsManifest } from "pixi.js";
 import "@esotericsoftware/spine-pixi-v8";
 
-import { getSpine } from "./utils/spine-example";
+import { gameHeight, gameWidth } from "./gameSettings";
 import { createBird } from "./utils/create-bird";
-
-const gameWidth = 1280;
-const gameHeight = 720;
-
-console.log(
-    `%cPixiJS V8\nTypescript Boilerplate%c ${VERSION} %chttp://www.pixijs.com %c❤️`,
-    "background: #ff66a1; color: #FFFFFF; padding: 2px 4px; border-radius: 2px; font-weight: bold;",
-    "color: #D81B60; font-weight: bold;",
-    "color: #C2185B; font-weight: bold; text-decoration: underline;",
-    //     "color: #ff66a1;",
-);
 
 (async () => {
     const app = new Application();
@@ -30,21 +19,11 @@ console.log(
 
     async function loadGameAssets(): Promise<void> {
         const manifest = {
-            bundles: [
-                { name: "bird", assets: [{ alias: "bird", src: "./assets/simpleSpriteSheet.json" }] },
-                {
-                    name: "spineboyData",
-                    assets: [{ alias: "spineboyData", src: "./assets/spine-assets/spineboy-pro.skel" }],
-                },
-                {
-                    name: "spineboyAtlas",
-                    assets: [{ alias: "spineboyAtlas", src: "./assets/spine-assets/spineboy-pma.atlas" }],
-                },
-            ],
+            bundles: [{ name: "ship", assets: [{ alias: "ship", src: "./assets/ship.png" }] }],
         } satisfies AssetsManifest;
 
         await Assets.init({ manifest });
-        await Assets.loadBundle(["bird", "spineboyData", "spineboyAtlas", "pixieData", "pixieAtlas"]);
+        await Assets.loadBundle(["ship"]);
 
         document.body.appendChild(app.canvas);
 
@@ -55,10 +34,7 @@ console.log(
         birdFromSprite.anchor.set(0.5, 0.5);
         birdFromSprite.position.set(gameWidth / 2, gameHeight / 4);
 
-        const spineExample = await getSpine();
-
         app.stage.addChild(birdFromSprite);
-        app.stage.addChild(spineExample);
     }
 
     function resizeCanvas(): void {
