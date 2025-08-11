@@ -3,7 +3,8 @@ import { Application, Assets, AssetsManifest } from "pixi.js";
 import "@esotericsoftware/spine-pixi-v8";
 
 import { gameHeight, gameWidth } from "./gameSettings";
-import { createBird } from "./utils/create-bird";
+import { Ship } from "./ship";
+import { Bullet } from "./bullet";
 
 (async () => {
     const app = new Application();
@@ -29,12 +30,11 @@ import { createBird } from "./utils/create-bird";
 
         resizeCanvas();
 
-        const birdFromSprite = createBird();
+        const shipFromSprite = new Ship();
+        const bullet = new Bullet();
 
-        birdFromSprite.anchor.set(0.5, 0.5);
-        birdFromSprite.position.set(gameWidth / 2, gameHeight / 4);
-
-        app.stage.addChild(birdFromSprite);
+        app.stage.addChild(shipFromSprite);
+        app.stage.addChild(bullet);
     }
 
     function resizeCanvas(): void {
