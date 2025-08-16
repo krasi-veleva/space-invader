@@ -21,7 +21,7 @@ export class Ship extends AnimatedSprite {
     public moveLeftAndRight(event: KeyboardEvent): void {
         const key = event.key;
         const bound = this.width / 2;
-        let shipX: number = this.x;
+        const shipX: number = this.x;
 
         if (key === "ArrowLeft") {
             if (this.x <= 0 + bound) {
@@ -29,9 +29,7 @@ export class Ship extends AnimatedSprite {
             }
 
             gsap.to(this, {
-                x: function () {
-                    return (shipX -= 45);
-                },
+                x: shipX - 45,
                 duration: 0.1,
                 ease: "none",
             });
@@ -42,9 +40,7 @@ export class Ship extends AnimatedSprite {
             }
 
             gsap.to(this, {
-                x: function () {
-                    return (shipX += 45);
-                },
+                x: shipX + 45,
                 duration: 0.1,
                 ease: "none",
             });
