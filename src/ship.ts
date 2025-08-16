@@ -1,4 +1,5 @@
 import { AnimatedSprite, Texture } from "pixi.js";
+import gsap from "gsap";
 import { gameHeight, gameWidth } from "./gameSettings";
 
 export class Ship extends AnimatedSprite {
@@ -20,20 +21,33 @@ export class Ship extends AnimatedSprite {
     public moveLeftAndRight(event: KeyboardEvent): void {
         const key = event.key;
         const bound = this.width / 2;
+        let shipX: number = this.x;
 
         if (key === "ArrowLeft") {
             if (this.x <= 0 + bound) {
                 return;
             }
 
-            this.x -= 15;
+            gsap.to(this, {
+                x: function () {
+                    return (shipX -= 45);
+                },
+                duration: 0.1,
+                ease: "none",
+            });
             console.log("left key pressed");
         } else if (key === "ArrowRight") {
             if (this.x >= gameWidth - bound) {
                 return;
             }
 
-            this.x += 10;
+            gsap.to(this, {
+                x: function () {
+                    return (shipX += 45);
+                },
+                duration: 0.1,
+                ease: "none",
+            });
             console.log("right key pressed");
         }
     }
