@@ -1,5 +1,5 @@
 import "./style.css";
-import { Application, Assets, AssetsManifest } from "pixi.js";
+import { Application, Assets, AssetsManifest, Graphics } from "pixi.js";
 import "@esotericsoftware/spine-pixi-v8";
 
 import { gameHeight, gameWidth } from "./gameSettings";
@@ -14,7 +14,7 @@ import { Bullet } from "./bullet";
         window.addEventListener("load", resolve);
     });
 
-    await app.init({ backgroundColor: 0xd3d3d3, width: gameWidth, height: gameHeight });
+    await app.init({ backgroundColor: 0, width: gameWidth, height: gameHeight });
 
     await loadGameAssets();
 
@@ -30,7 +30,14 @@ import { Bullet } from "./bullet";
 
         resizeCanvas();
 
+        const background = new Graphics();
+
+        background.rect(0, 0, gameWidth, gameHeight).fill(0xd3d3d3);
+
+        app.stage.addChild(background);
+
         const shipFromSprite = new Ship();
+
         const bullet = new Bullet();
 
         app.stage.addChild(shipFromSprite);
@@ -39,13 +46,17 @@ import { Bullet } from "./bullet";
 
     function resizeCanvas(): void {
         const resize = () => {
+            const scaleX = window.innerWidth / gameWidth;
+            const scaleY = window.innerHeight / gameHeight;
+            const scale = Math.min(scaleX, scaleY);
+
             app.renderer.resize(window.innerWidth, window.innerHeight);
-            app.stage.scale.x = window.innerWidth / gameWidth;
-            app.stage.scale.y = window.innerHeight / gameHeight;
+            app.stage.scale.set(scale);
+            app.stage.x = (window.innerWidth - gameWidth * scale) / 2;
+            app.stage.y = (window.innerHeight - gameHeight * scale) / 2;
         };
 
         resize();
-
         window.addEventListener("resize", resize);
     }
 })();
