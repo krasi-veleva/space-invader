@@ -15,6 +15,7 @@ import { Bullet } from "./bullet";
     });
 
     await app.init({ backgroundColor: 0, width: gameWidth, height: gameHeight });
+    app.stage.interactive = true;
 
     await loadGameAssets();
 
@@ -36,7 +37,7 @@ import { Bullet } from "./bullet";
 
         app.stage.addChild(background);
 
-        const shipFromSprite = new Ship();
+        const shipFromSprite = new Ship(app.stage);
 
         const bullet = new Bullet();
 

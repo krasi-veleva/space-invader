@@ -1,11 +1,11 @@
-import { Sprite, Texture, Ticker } from "pixi.js";
+import { Container, Sprite, Texture, Ticker } from "pixi.js";
 import { gameHeight, gameWidth } from "./gameSettings";
 
 export class Ship extends Sprite {
     private keys = new Set<string>();
     private ticker = Ticker.shared;
 
-    constructor() {
+    constructor(stage: Container) {
         super(Texture.from("ship"));
 
         this.init();
@@ -19,6 +19,17 @@ export class Ship extends Sprite {
         });
 
         this.ticker.add(this.moveRightOrLeft.bind(this));
+
+        stage.on("mousemove", (event) => {
+            const mouseX = event.clientX;
+            const bound = this.width / 2;
+
+            if (mouseX <= 0 + bound || mouseX >= gameWidth - bound) {
+                return;
+            }
+
+            this.x = mouseX;
+        });
     }
 
     private init() {
@@ -32,9 +43,8 @@ export class Ship extends Sprite {
 
         if (key === "ArrowLeft" || key === "ArrowRight") {
             this.keys.add(key);
+            console.log(this.keys);
         }
-
-        console.log(this.keys);
     }
 
     private onKeyUp(event: KeyboardEvent) {
