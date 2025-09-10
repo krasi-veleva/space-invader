@@ -15,6 +15,7 @@ import { Bullet } from "./bullet";
     });
 
     await app.init({ backgroundColor: 0, width: gameWidth, height: gameHeight });
+    app.stage.eventMode = "dynamic";
     app.stage.interactive = true;
 
     await loadGameAssets();

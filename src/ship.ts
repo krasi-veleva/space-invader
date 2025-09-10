@@ -21,14 +21,10 @@ export class Ship extends Sprite {
         this.ticker.add(this.moveRightOrLeft.bind(this));
 
         stage.on("mousemove", (event) => {
-            const mouseX = event.clientX;
+            const { x } = event.getLocalPosition(stage);
             const bound = this.width / 2;
 
-            if (mouseX <= 0 + bound || mouseX >= gameWidth - bound) {
-                return;
-            }
-
-            this.x = mouseX;
+            this.x = Math.max(bound, Math.min(gameWidth - bound, x));
         });
     }
 
