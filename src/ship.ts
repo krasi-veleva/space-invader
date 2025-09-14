@@ -20,7 +20,7 @@ export class Ship extends Sprite {
 
         this.ticker.add(this.moveRightOrLeft.bind(this));
 
-        stage.on("mousemove", (event) => {
+        stage.on("globalmousemove", (event) => {
             const { x } = event.getLocalPosition(stage);
             const bound = this.width / 2;
 
