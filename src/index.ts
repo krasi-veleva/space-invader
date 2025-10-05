@@ -5,6 +5,7 @@ import "@esotericsoftware/spine-pixi-v8";
 import { gameHeight, gameWidth } from "./gameSettings";
 import { Ship } from "./ship";
 import { Bullet } from "./bullet";
+import { AliensGroup } from "./aliensGroup";
 
 (async () => {
     const app = new Application();
@@ -22,11 +23,14 @@ import { Bullet } from "./bullet";
 
     async function loadGameAssets(): Promise<void> {
         const manifest = {
-            bundles: [{ name: "ship", assets: [{ alias: "ship", src: "./assets/ship.png" }] }],
+            bundles: [
+                { name: "ship", assets: [{ alias: "ship", src: "./assets/ship.png" }] },
+                { name: "alien", assets: [{ alias: "alien", src: "./assets/alien.png" }] },
+            ],
         } satisfies AssetsManifest;
 
         await Assets.init({ manifest });
-        await Assets.loadBundle(["ship"]);
+        await Assets.loadBundle(["ship", "alien"]);
 
         document.body.appendChild(app.canvas);
 
@@ -42,8 +46,11 @@ import { Bullet } from "./bullet";
 
         const bullet = new Bullet();
 
+        const aliens = new AliensGroup();
+
         app.stage.addChild(shipFromSprite);
         app.stage.addChild(bullet);
+        app.stage.addChild(aliens);
     }
 
     function resizeCanvas(): void {
