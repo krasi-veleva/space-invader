@@ -14,6 +14,7 @@ export class AliensGroup extends Container {
         super();
         this.renderAliens();
         this.ticker.add(this.aliensMovement.bind(this));
+        this.ticker.add(this.aliensRotation.bind(this));
     }
 
     private renderAliens(): void {
@@ -41,5 +42,13 @@ export class AliensGroup extends Container {
         }
 
         this.x += this.speed * this.direction * this.ticker.deltaTime;
+    }
+
+    private aliensRotation(): void {
+        for (let i = 0; i < this.aliens.length; i++) {
+            const alien = this.aliens[i];
+
+            alien.rotation -= 0.01 * this.ticker.deltaTime;
+        }
     }
 }
