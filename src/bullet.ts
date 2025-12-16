@@ -1,11 +1,12 @@
-import { Graphics } from "pixi.js";
+import { Sprite, Texture } from "pixi.js";
 import { gameHeight, gameWidth } from "./gameSettings";
 
-export class Bullet extends Graphics {
+export class Bullet extends Sprite {
     constructor() {
-        super();
+        super(Texture.from("bullet"));
 
-        this.rect(0, 0, 5, 20).fill(0xde3249);
+        this.scale.set(0.1);
+        this.anchor.set(0.5, 0.5);
 
         this.position.set(gameWidth / 2, gameHeight / 2);
     }

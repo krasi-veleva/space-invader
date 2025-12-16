@@ -26,11 +26,12 @@ import { AliensGroup } from "./aliensGroup";
             bundles: [
                 { name: "ship", assets: [{ alias: "ship", src: "./assets/ship.png" }] },
                 { name: "alien", assets: [{ alias: "alien", src: "./assets/alien.png" }] },
+                { name: "bullet", assets: [{ alias: "bullet", src: "./assets/bullet.png" }] },
             ],
         } satisfies AssetsManifest;
 
         await Assets.init({ manifest });
-        await Assets.loadBundle(["ship", "alien"]);
+        await Assets.loadBundle(["ship", "alien", "bullet"]);
 
         document.body.appendChild(app.canvas);
 
