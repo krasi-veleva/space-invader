@@ -1,6 +1,5 @@
 import { Container, Sprite, Texture, Ticker } from "pixi.js";
 import { gameHeight, gameWidth } from "./gameSettings";
-
 export class Ship extends Sprite {
     private keys = new Set<string>();
     private ticker = Ticker.shared;
@@ -11,11 +10,11 @@ export class Ship extends Sprite {
         this.init();
 
         window.addEventListener("keydown", (e) => {
-            this.onKeyDown(e);
+            this.arrowOnKeyDown(e);
         });
 
         window.addEventListener("keyup", (e) => {
-            this.onKeyUp(e);
+            this.arrowOnKeyUp(e);
         });
 
         this.ticker.add(this.moveRightOrLeft.bind(this));
@@ -34,7 +33,7 @@ export class Ship extends Sprite {
         this.position.set(gameWidth / 2, gameHeight - this.height / 2);
     }
 
-    private onKeyDown(event: KeyboardEvent) {
+    private arrowOnKeyDown(event: KeyboardEvent) {
         const key = event.key;
 
         if (key === "ArrowLeft" || key === "ArrowRight") {
@@ -43,7 +42,7 @@ export class Ship extends Sprite {
         }
     }
 
-    private onKeyUp(event: KeyboardEvent) {
+    private arrowOnKeyUp(event: KeyboardEvent) {
         const key = event.key;
 
         if (key === "ArrowLeft" || key === "ArrowRight") {

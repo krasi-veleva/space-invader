@@ -1,11 +1,9 @@
 import "./style.css";
 import { Application, Assets, AssetsManifest, Graphics } from "pixi.js";
+import { Game } from "./game";
 import "@esotericsoftware/spine-pixi-v8";
 
 import { gameHeight, gameWidth } from "./gameSettings";
-import { Ship } from "./ship";
-import { Bullet } from "./bullet";
-import { AliensGroup } from "./aliensGroup";
 
 (async () => {
     const app = new Application();
@@ -43,15 +41,9 @@ import { AliensGroup } from "./aliensGroup";
 
         app.stage.addChild(background);
 
-        const shipFromSprite = new Ship(app.stage);
+        const game = new Game(app.stage);
 
-        const bullet = new Bullet();
-
-        const aliens = new AliensGroup();
-
-        app.stage.addChild(shipFromSprite);
-        app.stage.addChild(bullet);
-        app.stage.addChild(aliens);
+        app.stage.addChild(game);
     }
 
     function resizeCanvas(): void {
