@@ -18,37 +18,37 @@ export class Game extends Container {
         stage.addChild(aliens);
 
         window.addEventListener("keydown", (e) => {
-            this.onSpacePressed(e, stage);
+            this.handleBulletShooting(e, stage);
         });
 
         window.addEventListener("click", (e) => {
-            this.onMouseLeftClick(e, stage);
+            this.handleBulletShooting(e, stage);
         });
     }
 
-    private onSpacePressed(event: KeyboardEvent, stage: Container) {
-        if (event.key === " " || event.code === "Space") {
-            this.keys.add(event.code);
-            console.log("space pressed");
-            console.log(this.keys);
+    private handleBulletShooting(event: KeyboardEvent | MouseEvent, stage: Container) {
+        if (event instanceof KeyboardEvent) {
+            if (event.key === " " || event.code === "Space") {
+                this.keys.add(event.code);
+                console.log("space pressed");
+                console.log(this.keys);
+                this.initBullet(stage);
+            }
+        }
 
-            this.bullet = new Bullet(this);
-
-            this.bullet.position.set(this.ship.x, this.ship.y - 65);
-
-            stage.addChild(this.bullet);
+        if (event instanceof MouseEvent) {
+            if (event.button === 0) {
+                console.log("left mouse button was clicked");
+                this.initBullet(stage);
+            }
         }
     }
 
-    private onMouseLeftClick(event: MouseEvent, stage: Container) {
-        if (event.button === 0) {
-            console.log("left mouse button was clicked");
+    private initBullet(stage: Container) {
+        this.bullet = new Bullet(this);
 
-            this.bullet = new Bullet(this);
+        this.bullet.position.set(this.ship.x, this.ship.y - 65);
 
-            this.bullet.position.set(this.ship.x, this.ship.y - 65);
-
-            stage.addChild(this.bullet);
-        }
+        stage.addChild(this.bullet);
     }
 }
