@@ -25,11 +25,12 @@ import { gameHeight, gameWidth } from "./gameSettings";
                 { name: "ship", assets: [{ alias: "ship", src: "./assets/ship.png" }] },
                 { name: "alien", assets: [{ alias: "alien", src: "./assets/alien.png" }] },
                 { name: "bullet", assets: [{ alias: "bullet", src: "./assets/bullet.png" }] },
+                { name: "alienBullet", assets: [{ alias: "alienBullet", src: "./assets/alienBullet.png" }] },
             ],
         } satisfies AssetsManifest;
 
         await Assets.init({ manifest });
-        await Assets.loadBundle(["ship", "alien", "bullet"]);
+        await Assets.loadBundle(["ship", "alien", "bullet", "alienBullet"]);
 
         document.body.appendChild(app.canvas);
 

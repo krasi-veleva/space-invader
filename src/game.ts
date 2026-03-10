@@ -12,7 +12,7 @@ export class Game extends Container {
         super();
 
         this.ship = new Ship(stage);
-        const aliens = new AliensGroup();
+        const aliens = new AliensGroup(stage);
 
         stage.addChild(this.ship);
         stage.addChild(aliens);
