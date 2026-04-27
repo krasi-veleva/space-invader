@@ -36,7 +36,7 @@ export class Bullet extends Sprite {
         this.ticker.add(this.onTick);
     }
 
-    private destroyBullet() {
+    public destroyBullet() {
         this.ticker.remove(this.onTick);
 
         this.destroy();
