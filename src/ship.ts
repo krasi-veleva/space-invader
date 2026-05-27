@@ -1,8 +1,9 @@
-import { Container, Sprite, Texture, Ticker } from "pixi.js";
+import { Container, FederatedPointerEvent, Sprite, Texture, Ticker } from "pixi.js";
 import { gameHeight, gameWidth } from "./gameSettings";
 export class Ship extends Sprite {
     private keys = new Set<string>();
     private ticker = Ticker.shared;
+    private stage: Container;
     private onTick: () => void;
     private onKeyDown = (e: KeyboardEvent) => {
         this.arrowOnKeyDown(e);
@@ -12,8 +13,16 @@ export class Ship extends Sprite {
         this.arrowOnKeyUp(e);
     };
 
+    private onMouseMove = (event: FederatedPointerEvent) => {
+        const { x } = event.getLocalPosition(this.stage);
+        const bound = this.width / 2;
+
+        this.x = Math.max(bound, Math.min(gameWidth - bound, x));
+    };
+
     constructor(stage: Container) {
         super(Texture.from("ship"));
+        this.stage = stage;
 
         this.init();
 
@@ -21,18 +30,11 @@ export class Ship extends Sprite {
 
         window.addEventListener("keyup", this.onKeyUp);
 
-        this.onKeyDown = this.arrowOnKeyDown.bind(this);
-
         this.onTick = this.moveRightOrLeft.bind(this);
 
         this.ticker.add(this.onTick);
 
-        stage.on("globalmousemove", (event) => {
-            const { x } = event.getLocalPosition(stage);
-            const bound = this.width / 2;
-
-            this.x = Math.max(bound, Math.min(gameWidth - bound, x));
-        });
+        stage.on("globalmousemove", this.onMouseMove);
     }
 
     private init() {
@@ -82,6 +84,7 @@ export class Ship extends Sprite {
         this.ticker.remove(this.onTick);
         window.removeEventListener("keydown", this.onKeyDown);
         window.removeEventListener("keyup", this.onKeyUp);
+        this.stage.off("globalmousemove", this.onMouseMove);
 
         this.destroy();
 
