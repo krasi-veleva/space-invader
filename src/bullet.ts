@@ -6,7 +6,10 @@ export class Bullet extends Sprite {
     private onTick: () => void;
     private speed = 10;
 
-    constructor(private game: Game) {
+    constructor(
+        private game: Game,
+        private shipBullets: Bullet[],
+    ) {
         super(Texture.from("bullet"));
 
         this.init();
@@ -40,6 +43,9 @@ export class Bullet extends Sprite {
         this.ticker.remove(this.onTick);
 
         this.destroy();
+
+        this.shipBullets.splice(this.shipBullets.indexOf(this), 1);
+
         console.log("bullet is destroyed");
     }
 }

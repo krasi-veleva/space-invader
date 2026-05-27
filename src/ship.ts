@@ -3,21 +3,29 @@ import { gameHeight, gameWidth } from "./gameSettings";
 export class Ship extends Sprite {
     private keys = new Set<string>();
     private ticker = Ticker.shared;
+    private onTick: () => void;
+    private onKeyDown = (e: KeyboardEvent) => {
+        this.arrowOnKeyDown(e);
+    };
+
+    private onKeyUp = (e: KeyboardEvent) => {
+        this.arrowOnKeyUp(e);
+    };
 
     constructor(stage: Container) {
         super(Texture.from("ship"));
 
         this.init();
 
-        window.addEventListener("keydown", (e) => {
-            this.arrowOnKeyDown(e);
-        });
+        window.addEventListener("keydown", this.onKeyDown);
 
-        window.addEventListener("keyup", (e) => {
-            this.arrowOnKeyUp(e);
-        });
+        window.addEventListener("keyup", this.onKeyUp);
 
-        this.ticker.add(this.moveRightOrLeft.bind(this));
+        this.onKeyDown = this.arrowOnKeyDown.bind(this);
+
+        this.onTick = this.moveRightOrLeft.bind(this);
+
+        this.ticker.add(this.onTick);
 
         stage.on("globalmousemove", (event) => {
             const { x } = event.getLocalPosition(stage);
@@ -68,5 +76,15 @@ export class Ship extends Sprite {
 
             this.x += 10;
         }
+    }
+
+    public destroyShip() {
+        this.ticker.remove(this.onTick);
+        window.removeEventListener("keydown", this.onKeyDown);
+        window.removeEventListener("keyup", this.onKeyUp);
+
+        this.destroy();
+
+        console.log("ship is destroyed");
     }
 }

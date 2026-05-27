@@ -9,6 +9,7 @@ export class Game extends Container {
     public ship: Ship;
     public aliens: AliensGroup;
     public bullet?: Bullet;
+    public shipBullets: Bullet[] = [];
 
     constructor(stage: Container) {
         super();
@@ -29,6 +30,10 @@ export class Game extends Container {
 
         this.ticker.add(() => {
             this.shipBulletAndAliensCollision();
+        });
+
+        this.ticker.add(() => {
+            this.aliensGroupAndShipCollision();
         });
     }
 
@@ -51,7 +56,9 @@ export class Game extends Container {
     }
 
     private initBullet(stage: Container) {
-        this.bullet = new Bullet(this);
+        this.bullet = new Bullet(this, this.shipBullets);
+
+        this.shipBullets.push(this.bullet);
 
         this.bullet.position.set(this.ship.x, this.ship.y - 65);
 
@@ -65,11 +72,25 @@ export class Game extends Container {
             return;
         }
 
+        for (let i = 0; i < this.shipBullets.length; i++) {
+            for (let j = 0; j < aliens.length; j++) {
+                if (this.isCollisionSuccessful(this.shipBullets[i], aliens[j])) {
+                    console.log("ship bullet and aliens collided", i);
+                    aliens[j].destroy();
+                    this.shipBullets[i].destroyBullet();
+                    console.error(this.shipBullets);
+                }
+            }
+        }
+    }
+
+    private aliensGroupAndShipCollision() {
+        const aliens = this.aliens.children;
+
         for (let i = 0; i < aliens.length; i++) {
-            if (this.isCollisionSuccessful(this.bullet, aliens[i])) {
-                console.log("ship and bullet collided", i);
-                aliens[i].destroy();
-                this.bullet.destroyBullet();
+            if (this.isCollisionSuccessful(this.ship, aliens[i])) {
+                this.ship.destroyShip();
+                console.log("ship and aliens collided");
             }
         }
     }
