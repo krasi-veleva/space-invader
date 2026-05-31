@@ -8,7 +8,7 @@ export class Game extends Container {
     private keys = new Set<string>();
     private ticker: Ticker = Ticker.shared;
     private stage: Container;
-    public ship: Ship;
+    public ship: Ship | null;
     public aliens: AliensGroup;
     public bullet?: Bullet;
     public alienBullet?: AlienBullet;
@@ -49,6 +49,10 @@ export class Game extends Container {
     }
 
     private handleShipShooting(event: KeyboardEvent | MouseEvent, stage: Container) {
+        if (!this.ship) {
+            return;
+        }
+
         if (event instanceof KeyboardEvent) {
             if (event.key === " " || event.code === "Space") {
                 this.keys.add(event.code);
@@ -67,6 +71,10 @@ export class Game extends Container {
     }
 
     private initBullet(stage: Container) {
+        if (!this.ship) {
+            return;
+        }
+
         this.bullet = new Bullet(this, this.shipBullets);
 
         this.shipBullets.push(this.bullet);
@@ -121,6 +129,10 @@ export class Game extends Container {
     }
 
     private aliensGroupAndShipCollision() {
+        if (!this.ship) {
+            return;
+        }
+
         const aliens = this.aliens.children;
 
         for (let i = 0; i < aliens.length; i++) {
@@ -133,9 +145,14 @@ export class Game extends Container {
 
     private aliensBulletAndShipCollision() {
         for (let i = 0; i < this.aliensBullets.length; i++) {
+            if (!this.ship) {
+                return;
+            }
+
             if (this.isCollisionSuccessful(this.aliensBullets[i], this.ship)) {
                 console.log("alines bullet and ship collided");
                 this.ship.destroyShip();
+                this.ship = null;
                 this.aliensBullets[i].destroyAlienBullet();
             }
         }
