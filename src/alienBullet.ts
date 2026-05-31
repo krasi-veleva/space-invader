@@ -4,9 +4,9 @@ import { gameHeight } from "./gameSettings";
 export class AlienBullet extends Sprite {
     private ticker = Ticker.shared;
     private onTick: () => void;
-    private speed = 5;
+    private speed = 6;
 
-    constructor() {
+    constructor(private aliensBullets: AlienBullet[]) {
         super(Texture.from("alienBullet"));
 
         this.init();
@@ -24,7 +24,7 @@ export class AlienBullet extends Sprite {
 
         if (this.y >= gameHeight) {
             console.log("destroying because out of screen");
-            this.destroyBullet();
+            this.destroyAlienBullet();
         }
     }
 
@@ -32,8 +32,10 @@ export class AlienBullet extends Sprite {
         this.ticker.add(this.onTick);
     }
 
-    private destroyBullet() {
+    public destroyAlienBullet() {
         this.ticker.remove(this.onTick);
+
+        this.aliensBullets.splice(this.aliensBullets.indexOf(this), 1);
 
         this.destroy();
         console.log("bullet is destroyed");

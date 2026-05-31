@@ -2,17 +2,22 @@ import { Container, Ticker } from "pixi.js";
 import { Ship } from "./ship";
 import { Bullet } from "./bullet";
 import { AliensGroup } from "./aliensGroup";
+import { AlienBullet } from "./alienBullet";
 
 export class Game extends Container {
     private keys = new Set<string>();
     private ticker: Ticker = Ticker.shared;
+    private stage: Container;
     public ship: Ship;
     public aliens: AliensGroup;
     public bullet?: Bullet;
+    public alienBullet?: AlienBullet;
     public shipBullets: Bullet[] = [];
+    public aliensBullets: AlienBullet[] = [];
 
     constructor(stage: Container) {
         super();
+        this.stage = stage;
 
         this.ship = new Ship(stage);
         this.aliens = new AliensGroup(stage);
@@ -21,11 +26,11 @@ export class Game extends Container {
         stage.addChild(this.aliens);
 
         window.addEventListener("keydown", (e) => {
-            this.handleBulletShooting(e, stage);
+            this.handleShipShooting(e, stage);
         });
 
         window.addEventListener("click", (e) => {
-            this.handleBulletShooting(e, stage);
+            this.handleShipShooting(e, stage);
         });
 
         this.ticker.add(() => {
@@ -35,9 +40,15 @@ export class Game extends Container {
         this.ticker.add(() => {
             this.aliensGroupAndShipCollision();
         });
+
+        this.ticker.add(() => {
+            this.aliensBulletAndShipCollision();
+        });
+
+        this.aliensShooting();
     }
 
-    private handleBulletShooting(event: KeyboardEvent | MouseEvent, stage: Container) {
+    private handleShipShooting(event: KeyboardEvent | MouseEvent, stage: Container) {
         if (event instanceof KeyboardEvent) {
             if (event.key === " " || event.code === "Space") {
                 this.keys.add(event.code);
@@ -65,6 +76,32 @@ export class Game extends Container {
         stage.addChild(this.bullet);
     }
 
+    private aliensShooting(): void {
+        setInterval(() => {
+            this.createAlienBullet();
+        }, 2000);
+    }
+
+    private createAlienBullet() {
+        const randomIndex = Math.floor(Math.random() * this.aliens.children.length);
+        const alien = this.aliens.children[randomIndex];
+
+        if (!alien) {
+            return;
+        }
+
+        this.alienBullet = new AlienBullet(this.aliensBullets);
+
+        const alienPositionX = this.aliens.x + alien.x;
+        const alienPositionY = this.aliens.y + alien.y + alien.height;
+
+        this.alienBullet.position.set(alienPositionX, alienPositionY);
+
+        this.aliensBullets.push(this.alienBullet);
+
+        this.stage.addChild(this.alienBullet);
+    }
+
     private shipBulletAndAliensCollision() {
         const aliens = this.aliens.children;
 
@@ -78,7 +115,6 @@ export class Game extends Container {
                     console.log("ship bullet and aliens collided", i);
                     aliens[j].destroy();
                     this.shipBullets[i].destroyBullet();
-                    console.error(this.shipBullets);
                 }
             }
         }
@@ -91,6 +127,16 @@ export class Game extends Container {
             if (this.isCollisionSuccessful(this.ship, aliens[i])) {
                 this.ship.destroyShip();
                 console.log("ship and aliens collided");
+            }
+        }
+    }
+
+    private aliensBulletAndShipCollision() {
+        for (let i = 0; i < this.aliensBullets.length; i++) {
+            if (this.isCollisionSuccessful(this.aliensBullets[i], this.ship)) {
+                console.log("alines bullet and ship collided");
+                this.ship.destroyShip();
+                this.aliensBullets[i].destroyAlienBullet();
             }
         }
     }
