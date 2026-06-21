@@ -1,9 +1,8 @@
-import "./style.css";
 import { Application, Assets, AssetsManifest, Graphics } from "pixi.js";
-import { Game } from "./game";
 import "@esotericsoftware/spine-pixi-v8";
 
 import { gameHeight, gameWidth } from "./gameSettings";
+import { SceneManager } from "./SceneManager";
 
 (async () => {
     const app = new Application();
@@ -30,6 +29,7 @@ import { gameHeight, gameWidth } from "./gameSettings";
         } satisfies AssetsManifest;
 
         await Assets.init({ manifest });
+        await Assets.load("https://pixijs.com/assets/webfont-loader/Grandstander-ExtraBold.ttf");
         await Assets.loadBundle(["ship", "alien", "bullet", "alienBullet"]);
 
         document.body.appendChild(app.canvas);
@@ -42,9 +42,9 @@ import { gameHeight, gameWidth } from "./gameSettings";
 
         app.stage.addChild(background);
 
-        const game = new Game(app.stage);
+        const sceneManager = new SceneManager();
 
-        app.stage.addChild(game);
+        app.stage.addChild(sceneManager);
     }
 
     function resizeCanvas(): void {

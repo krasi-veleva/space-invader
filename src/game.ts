@@ -7,7 +7,6 @@ import { AlienBullet } from "./alienBullet";
 export class Game extends Container {
     private keys = new Set<string>();
     private ticker: Ticker = Ticker.shared;
-    private stage: Container;
     public ship: Ship | null;
     public aliens: AliensGroup;
     public bullet?: Bullet;
@@ -15,22 +14,24 @@ export class Game extends Container {
     public shipBullets: Bullet[] = [];
     public aliensBullets: AlienBullet[] = [];
 
-    constructor(stage: Container) {
+    constructor() {
         super();
-        this.stage = stage;
 
-        this.ship = new Ship(stage);
-        this.aliens = new AliensGroup(stage);
+        this.interactive = true;
 
-        stage.addChild(this.ship);
-        stage.addChild(this.aliens);
+        this.ship = new Ship(this);
+        this.aliens = new AliensGroup(this);
+
+        this.addChild(this.ship);
+        this.addChild(this.aliens);
 
         window.addEventListener("keydown", (e) => {
-            this.handleShipShooting(e, stage);
+            this.handleShipShooting(e, this);
         });
 
         window.addEventListener("click", (e) => {
-            this.handleShipShooting(e, stage);
+            console.log("shoot");
+            this.handleShipShooting(e, this);
         });
 
         this.ticker.add(() => {
@@ -107,7 +108,7 @@ export class Game extends Container {
 
         this.aliensBullets.push(this.alienBullet);
 
-        this.stage.addChild(this.alienBullet);
+        this.addChild(this.alienBullet);
     }
 
     private shipBulletAndAliensCollision() {
