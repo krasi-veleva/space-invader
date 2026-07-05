@@ -20,10 +20,8 @@ export class SceneManager extends Container {
                 this.removeChild(this.startScene);
                 this.startScene.destroy();
 
-                setTimeout(() => {
-                    this.gameScene = new Game();
-                    this.addChild(this.gameScene);
-                }, 100);
+                this.gameScene = new Game();
+                this.addChild(this.gameScene);
             }
         });
     }

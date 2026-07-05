@@ -1,12 +1,19 @@
-import { Container, Ticker } from "pixi.js";
+import { Container, FederatedPointerEvent, Rectangle, Ticker } from "pixi.js";
 import { Ship } from "./ship";
 import { Bullet } from "./bullet";
 import { AliensGroup } from "./aliensGroup";
 import { AlienBullet } from "./alienBullet";
+import { gameHeight, gameWidth } from "./gameSettings";
 
 export class Game extends Container {
     private keys = new Set<string>();
     private ticker: Ticker = Ticker.shared;
+    private onKeyDown = (e: KeyboardEvent) => {
+        this.handleShipShooting(e, this);
+    };
+    private onPointerDown = (e: FederatedPointerEvent) => {
+        this.handleShipShooting(e, this);
+    };
     public ship: Ship | null;
     public aliens: AliensGroup;
     public bullet?: Bullet;
@@ -18,6 +25,7 @@ export class Game extends Container {
         super();
 
         this.interactive = true;
+        this.hitArea = new Rectangle(0, 0, gameWidth, gameHeight);
 
         this.ship = new Ship(this);
         this.aliens = new AliensGroup(this);
@@ -25,14 +33,9 @@ export class Game extends Container {
         this.addChild(this.ship);
         this.addChild(this.aliens);
 
-        window.addEventListener("keydown", (e) => {
-            this.handleShipShooting(e, this);
-        });
+        window.addEventListener("keydown", this.onKeyDown);
 
-        window.addEventListener("click", (e) => {
-            console.log("shoot");
-            this.handleShipShooting(e, this);
-        });
+        this.on("pointerdown", this.onPointerDown);
 
         this.ticker.add(() => {
             this.shipBulletAndAliensCollision();
@@ -49,7 +52,7 @@ export class Game extends Container {
         this.aliensShooting();
     }
 
-    private handleShipShooting(event: KeyboardEvent | MouseEvent, stage: Container) {
+    private handleShipShooting(event: KeyboardEvent | FederatedPointerEvent, stage: Container) {
         if (!this.ship) {
             return;
         }
@@ -61,13 +64,9 @@ export class Game extends Container {
                 console.log(this.keys);
                 this.initBullet(stage);
             }
-        }
-
-        if (event instanceof MouseEvent) {
-            if (event.button === 0) {
-                console.log("left mouse button was clicked");
-                this.initBullet(stage);
-            }
+        } else if (event.button === 0) {
+            console.log("left mouse button was clicked");
+            this.initBullet(stage);
         }
     }
 
