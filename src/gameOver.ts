@@ -1,43 +1,22 @@
 import { Container, Graphics, Text } from "pixi.js";
 import { gameHeight, gameWidth } from "./gameSettings";
 
-export class StartScene extends Container {
-    private startButton?: Graphics;
+export class GameOver extends Container {
+    private playAgainButton?: Graphics;
     private buttonContainer?: Container;
-
     constructor() {
         super();
-
         this.init();
     }
 
     private init() {
         this.drawText();
-        this.createStartButton();
-        this.buttonContainer?.on("pointerdown", this.onStartClick.bind(this));
+        this.createPlayAgainButton();
+        this.buttonContainer?.on("pointerdown", this.onPlayAgainClicked.bind(this));
     }
 
-    private drawText() {
-        const text = new Text({
-            text: "Space Invaders",
-            style: {
-                fontFamily: "Grandstander ExtraBold",
-                fontSize: 70,
-                fill: 0xff9ff3,
-                stroke: { color: 0x000000, width: 6, join: "round" },
-                padding: 0,
-                fontWeight: "800",
-            },
-            x: gameWidth / 2,
-            y: gameHeight / 2 - 150,
-            anchor: 0.5,
-        });
-
-        this.addChild(text);
-    }
-
-    private createStartButton() {
-        this.startButton = new Graphics();
+    private createPlayAgainButton() {
+        this.playAgainButton = new Graphics();
         this.buttonContainer = new Container();
         this.buttonContainer.interactive = true;
 
@@ -47,13 +26,13 @@ export class StartScene extends Container {
         const positionX = gameWidth / 2 - buttonWidth / 2;
         const positionY = gameHeight / 2 - buttonHeight / 2;
 
-        this.startButton
+        this.playAgainButton
             .roundRect(0, 0, buttonWidth, buttonHeight, radius)
-            .fill({ color: 0xac92ea })
+            .fill({ color: 0x8b0000 })
             .stroke({ width: 4, color: 0x000000 });
 
         const startText = new Text({
-            text: "START",
+            text: "Play Again",
             style: {
                 fontFamily: "Grandstander ExtraBold",
                 fontSize: 32,
@@ -66,13 +45,32 @@ export class StartScene extends Container {
         startText.anchor.set(0.5);
         startText.position.set(0 + buttonWidth / 2, 0 + buttonHeight / 2);
 
-        this.buttonContainer.addChild(this.startButton);
+        this.buttonContainer.addChild(this.playAgainButton);
         this.buttonContainer.addChild(startText);
         this.addChild(this.buttonContainer);
         this.buttonContainer.position.set(positionX, positionY + 100);
     }
 
-    private onStartClick() {
-        this.emit("startClicked", "game");
+    private drawText() {
+        const text = new Text({
+            text: "Game Over",
+            style: {
+                fontFamily: "Grandstander ExtraBold",
+                fontSize: 70,
+                fill: 0x8b0000,
+                stroke: { color: 0x000000, width: 6, join: "round" },
+                padding: 0,
+                fontWeight: "800",
+            },
+            x: gameWidth / 2,
+            y: gameHeight / 2 - 150,
+            anchor: 0.5,
+        });
+
+        this.addChild(text);
+    }
+
+    private onPlayAgainClicked() {
+        this.emit("playAgainClicked", "game1");
     }
 }

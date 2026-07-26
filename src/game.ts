@@ -151,6 +151,7 @@ export class Game extends Container {
 
             if (this.isCollisionSuccessful(this.aliensBullets[i], this.ship)) {
                 console.log("alines bullet and ship collided");
+                this.shipDestroyed();
                 this.ship.destroyShip();
                 this.ship = null;
                 this.aliensBullets[i].destroyAlienBullet();
@@ -172,5 +173,9 @@ export class Game extends Container {
             bounds1.y < bounds2.y + bounds2.height &&
             bounds1.y + bounds1.height > bounds2.y
         );
+    }
+
+    private shipDestroyed() {
+        this.emit("ship_destroyed", "gameOver");
     }
 }
