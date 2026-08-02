@@ -49,7 +49,7 @@ export class StartScene extends Container {
 
         this.startButton
             .roundRect(0, 0, buttonWidth, buttonHeight, radius)
-            .fill({ color: 0xac92ea })
+            .fill({ color: 0xff9ff3 })
             .stroke({ width: 4, color: 0x000000 });
 
         const startText = new Text({

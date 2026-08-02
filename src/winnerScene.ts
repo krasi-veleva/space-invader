@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from "pixi.js";
 import { gameHeight, gameWidth } from "./gameSettings";
 
-export class GameOver extends Container {
+export class WinnerScene extends Container {
     private playAgainButton?: Graphics;
     private buttonContainer?: Container;
     constructor() {
@@ -28,7 +28,7 @@ export class GameOver extends Container {
 
         this.playAgainButton
             .roundRect(0, 0, buttonWidth, buttonHeight, radius)
-            .fill({ color: 0x8b0000 })
+            .fill({ color: 0x7fffd4 })
             .stroke({ width: 4, color: 0x000000 });
 
         const startText = new Text({
@@ -53,14 +53,15 @@ export class GameOver extends Container {
 
     private drawText() {
         const text = new Text({
-            text: "Game Over",
+            text: "Congratulations\nYou won!",
             style: {
                 fontFamily: "Grandstander ExtraBold",
                 fontSize: 70,
-                fill: 0x8b0000,
+                fill: 0x7fffd4,
                 stroke: { color: 0x000000, width: 6, join: "round" },
                 padding: 0,
                 fontWeight: "800",
+                align: "center",
             },
             x: gameWidth / 2,
             y: gameHeight / 2 - 150,

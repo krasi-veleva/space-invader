@@ -126,6 +126,10 @@ export class Game extends Container {
                 }
             }
         }
+
+        if (aliens.length === 0) {
+            this.aliensDestroyed();
+        }
     }
 
     private aliensGroupAndShipCollision() {
@@ -138,6 +142,7 @@ export class Game extends Container {
         for (let i = 0; i < aliens.length; i++) {
             if (this.isCollisionSuccessful(this.ship, aliens[i])) {
                 this.ship.destroyShip();
+                this.shipDestroyed();
                 console.log("ship and aliens collided");
             }
         }
@@ -177,5 +182,9 @@ export class Game extends Container {
 
     private shipDestroyed() {
         this.emit("ship_destroyed", "gameOver");
+    }
+
+    private aliensDestroyed() {
+        this.emit("aliens_destroyed", "winner");
     }
 }

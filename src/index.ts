@@ -38,7 +38,7 @@ import { SceneManager } from "./SceneManager";
 
         const background = new Graphics();
 
-        background.rect(0, 0, gameWidth, gameHeight).fill(0xd3d3d3);
+        background.rect(0, 0, gameWidth, gameHeight).fill(0xffc6df);
 
         app.stage.addChild(background);
 
